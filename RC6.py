@@ -158,9 +158,16 @@ def rc6_decrypt(ciphertext, key):
 
 # Contoh penggunaan
 if __name__ == "__main__":
-    # Ciphertext yang ingin didekripsi (contoh)
-    ciphertext = [0x12345678, 0x9abcdef0]  # Contoh blok ciphertext
-    key = [0x0f0e0d0c, 0x0b0a0908, 0x07060504, 0x03020100]  # Contoh kunci
+    key = b"0123456789ABCDEF"  # Kunci 128-bit
+    plaintext = b"Hello, World!!!"  # Pastikan ini adalah 16 byte
 
-    plaintext = rc6_decrypt(ciphertext, key)
-    print("Plaintext:", plaintext)
+    # Jika plaintext kurang dari 16 byte, tambahkan padding
+    if len(plaintext) < 16:
+        plaintext += b'\x00' * (16 - len(plaintext))  # Padding dengan nol
+
+    rc6 = RC6(key)
+    ciphertext = rc6.encrypt(plaintext)
+    print("Ciphertext:", ciphertext.hex())
+
+    decrypted = rc6.decrypt(ciphertext)
+    print("Decrypted:", decrypted)
